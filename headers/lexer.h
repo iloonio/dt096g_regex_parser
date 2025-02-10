@@ -40,8 +40,9 @@ class Lexer {
     };
 public:
     /**
-     * Lexes a string, dividing it into tokens.
-     * @param regex a regex expression
+     * In convoluted linguistics-borrowed language: sequentially categorizes every lexeme in a sequence into
+     * a token category. In simpler english: Sequentially divides each symbol into a tokens.
+     * @param regex An expression that complies with regex standards.
      * @return A list of Tokens which will be processed by a parser into an Abstract Syntax Tree
      */
     static std::vector<Tokens> lex(std::string regex);
