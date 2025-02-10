@@ -18,7 +18,7 @@ struct ASTNode {
  */
 
 class parser {
-
+    
 };
 
 

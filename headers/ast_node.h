@@ -7,6 +7,11 @@
 #include <vector>
 
 /**
+ * Also Known as Operands (OP), I am not sure on the naming convention
+ *
+ *
+ */
+/**
  * Virtual Abstract Syntax tree Node. Using Polymorphism, we will implement all other various types of nodes that will
  * go in our tree.
  */

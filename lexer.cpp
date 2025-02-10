@@ -5,7 +5,8 @@
 #include "headers/lexer.h"
 #include <iostream>
 
-
+//TODO: implement proper error handling
+//TODO: Convert vector to queue (We want FIFO for the parser)
 std::vector<Lexer::Tokens> Lexer::lex(std::string regex) {
     std::vector<Tokens> tokens;
     auto p = regex.begin();

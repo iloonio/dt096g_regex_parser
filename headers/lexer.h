@@ -6,6 +6,7 @@
 #define DT096G_REGEX_PARSER_LEXER_H
 #include <string>
 #include <vector>
+#include <queue>
 #include "Evaluator.h"
 #include "ast_node.h"
 
@@ -22,6 +23,10 @@
 /**
  * The Lexer takes in an input string and turns it into an array of tokens.
  */
+//TODO: Reconsider if we even need a whole class for Lexing.
+
+//Reasons for having a classless Lexer:
+    // - We only lex once and then we're done.
 class Lexer {
     enum Tokens {
         REGEXP,
