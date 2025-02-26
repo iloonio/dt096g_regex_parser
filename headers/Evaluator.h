@@ -5,7 +5,9 @@
 #ifndef DT096G_REGEX_PARSER_EVALUATOR_H
 #define DT096G_REGEX_PARSER_EVALUATOR_H
 
-
+/**
+ * This will contain the text file we apply our regex on.
+ */
 class Evaluator {
 
 };

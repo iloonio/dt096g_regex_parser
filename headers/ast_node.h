@@ -4,7 +4,14 @@
 
 #ifndef DT096G_REGEX_PARSER_AST_NODE_H
 #define DT096G_REGEX_PARSER_AST_NODE_H
+#include <memory>
 #include <vector>
+
+#include "ast_node.h"
+#include "ast_node.h"
+#include "ast_node.h"
+
+using ASTNodePtr = std::unique_ptr<struct ASTNode>;
 
 /**
  * Also Known as Operands (OP), I am not sure on the naming convention
@@ -18,14 +25,6 @@
 struct ASTNode {
     // virtual Evaluator evaluate() = 0;
     virtual ~ASTNode()= default;
-    std::vector<ASTNode*> operands{};
-};
-
-struct OrNode : ASTNode {
-    explicit OrNode(ASTNode* OP1, ASTNode* OP2) {
-        operands.push_back(OP1);
-        operands.push_back(OP2);
-    }
 };
 
 /**
@@ -33,13 +32,41 @@ struct OrNode : ASTNode {
  */
 struct CharNode : ASTNode{
     char c;
-    explicit CharNode(char c) : c(c){}; //Constructor for CharNode
+    //Constructor for CharNode
+    explicit CharNode(const char c) : c(c) {};
     // Evaluator evaluate() override; //TODO: This has to be implemented in order for the vtable to work properly.
 };
 
-struct ExprNode : ASTNode {
-
+struct ORNode : ASTNode {
+    ASTNodePtr left;
+    ASTNodePtr right;
+    explicit ORNode(ASTNodePtr lhs, ASTNodePtr rhs);
 };
 
+struct ConcatNode : ASTNode {
+    std::vector<ASTNodePtr> children;
+};
+
+struct UnaryNode : ASTNode {
+    ASTNodePtr atom;
+    explicit UnaryNode(ASTNodePtr atom);
+};
+
+struct GroupNode : ASTNode {
+    ASTNodePtr expression;
+    explicit GroupNode(ASTNodePtr expression);
+};
+
+struct EOPNode : ASTNode {
+    explicit EOPNode()= default;
+  //Evaluator evaluate() override;
+};
+
+// struct OrNode : ASTNode {
+//     explicit OrNode(ASTNode* OP1, ASTNode* OP2) {
+//         operands.push_back(OP1);
+//         operands.push_back(OP2);
+//     }
+// };
 
 #endif //DT096G_REGEX_PARSER_AST_NODE_H

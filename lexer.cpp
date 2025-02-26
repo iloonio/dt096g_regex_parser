@@ -5,55 +5,53 @@
 #include "headers/lexer.h"
 #include <iostream>
 
-//TODO: implement proper error handling
-//TODO: Convert vector to queue (We want FIFO for the parser)
-std::vector<Lexer::Tokens> Lexer::lex(std::string regex) {
-    std::vector<Tokens> tokens;
+std::queue<std::pair<Tokens, char>> lex(std::string regex) {
+    std::queue<std::pair <Tokens, char>> tokens;
     auto p = regex.begin();
     while (p != regex.end()) {
         switch (*p) {
             case '+':
-                tokens.push_back(OR);
+                tokens.emplace(OR,*p);
                 break;
             case '*':
-                tokens.push_back(KLEENE);
+                tokens.emplace(KLEENE, *p);
                 break;
             case '.':
-                tokens.push_back(DOT);
+                tokens.emplace(DOT, *p);
                 break;
             case '(':
-                tokens.push_back(GROUP_START);
+                tokens.emplace(GROUP_START, *p);
                 break;
             case ')':
-                tokens.push_back(GROUP_END);
+                tokens.emplace(GROUP_END, *p);
                 break;
             case '{':
-                tokens.push_back(COUNT_START);
+                tokens.emplace(COUNT_START, *p);
                 break;
             case '}':
-                tokens.push_back(COUNT_END);
+                tokens.emplace(COUNT_END, *p);
                 break;
 
             case '\\': // escape char for '\'
                 ++p;
                 if (*p =='I') {
-                    tokens.push_back(CASE);
+                    tokens.emplace(CASE, *p);
                 }
                 else if (*p == 'O') {
-                    tokens.push_back(OUTPUT);
+                    tokens.emplace(OUTPUT, *p);
                 } else {
-                    std::cerr << "invalid regex: Expected 'I' or 'O' after '/'.";
+                    std::cerr << "invalid regex: Expected 'I' or 'O' after '/'." << std::endl;
                 }
                 break;
 
             default:
                 if (isalnum(*p) or isspace(*p)){
-                    tokens.push_back(Tokens::CHAR);
+                    tokens.emplace(Tokens::CHAR, *p);
                 }
                 else if (isdigit(*p)) {
-                    tokens.push_back(Tokens::DIGIT);
+                    tokens.emplace(Tokens::DIGIT, *p);
                 } else {
-                    std::cerr << "invalid char in regex.";
+                    std::cerr << "invalid char in regex." << std::endl;
                 }
                 break;
         }
@@ -61,6 +59,6 @@ std::vector<Lexer::Tokens> Lexer::lex(std::string regex) {
         //begin at the start of the string and treat each case
         ++p; //move on to the next char
     }
-    tokens.push_back(EOP);
+    tokens.emplace(EOP, '_');
     return tokens;
 }
