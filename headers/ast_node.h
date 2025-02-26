@@ -13,6 +13,8 @@
 
 using ASTNodePtr = std::unique_ptr<struct ASTNode>;
 
+//TODO: define all Abstract Syntax Tree Nodes for our grammar!
+
 /**
  * Also Known as Operands (OP), I am not sure on the naming convention
  *
