@@ -52,7 +52,7 @@ public:
      * @return it will either return a unaryNode containing a charNode, or it will simply return the charNode
      * without creating any new nodes or recursive chains.
      */
-    ASTNodePtr parseUnary(ASTNodePtr node) const;
+    ASTNodePtr parseUnary(ASTNodePtr node);
 
     /**
      * Handles parsing inside of groups. Has error handling included to enforce

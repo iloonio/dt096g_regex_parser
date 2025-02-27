@@ -14,6 +14,7 @@
 using ASTNodePtr = std::unique_ptr<struct ASTNode>;
 
 //TODO: define all Abstract Syntax Tree Nodes for our grammar!
+//TODO: move functions to ast_node.cpp
 
 /**
  * Also Known as Operands (OP), I am not sure on the naming convention
@@ -50,9 +51,15 @@ struct ConcatNode : ASTNode {
     explicit ConcatNode()= default;
 };
 
-struct UnaryNode : ASTNode {
+struct KleeneNode : ASTNode {
     ASTNodePtr atom;
-    explicit UnaryNode(ASTNodePtr atom) : atom(std::move(atom)){};
+    explicit KleeneNode(ASTNodePtr atom) : atom(std::move(atom)){};
+};
+
+struct CountNode : ASTNode {
+    ASTNodePtr atom;
+    int count;
+    explicit CountNode(ASTNodePtr atom, int count) : atom(std::move(atom)), count(count){};
 };
 
 struct GroupNode : ASTNode {

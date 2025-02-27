@@ -67,29 +67,28 @@ ASTNodePtr parser::parseFactor() {
     throw std::runtime_error("parseFactor(): unexpected token");
 }
 
-ASTNodePtr parser::parseUnary(ASTNodePtr node) const {
+ASTNodePtr parser::parseUnary(ASTNodePtr node) {
     switch (currentToken()) {
         case Tokens::KLEENE:
-            auto unaryNode = std::make_unique<UnaryNode>(std::move(node));
+            auto unaryNode = std::make_unique<KleeneNode>(std::move(node));
             return unaryNode;
-        //TODO: Implement pseudocode for counter.
-        //case Tokens::COUNT_START:
-            /*
-             * while (currentToken != count_end) {
-             *      if (currentToken == Tokens::CHAR) {
-             *          std::string strNum += tkList.front().second;
-             *          nextToken();
-             *      }
-             * }
-             * int count = stoi(charNum);
-             *
-             * create unique CountingNode that stores count and is
-             * parent to an atom that precedes it in tkList.
-             */
-            // ... do stuff here for counting
-            break;
-        //default:
-        //    break;
+        case Tokens::COUNT_START:
+            std::string strNum;
+              while (currentToken() != Tokens::COUNT_END) {
+                  nextToken();
+                   if (currentToken() == Tokens::CHAR) {
+                       strNum += tkList.front().second;
+                   } else if (currentToken() != Tokens::COUNT_END) {
+                       throw std::runtime_error("parseUnary(): unexpected token (COUNT_START case)");
+                   }
+              }
+              int count = std::stoi(strNum); //convert concatenated string to a number.
+              /* create unique CountingNode that stores count and is
+              parent to an atom that precedes it in tkList. */
+              auto countNode = std::make_unique<CountNode>(std::move(node), count);
+              return countNode;
+        default:
+            throw std::runtime_error("parseUnary(): unexpected token (default case)");
     }
     return node;
 }
