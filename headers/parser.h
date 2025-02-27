@@ -47,10 +47,12 @@ public:
 
     /**
      * This is the final function in the recursive call which constructs potential unary operands.
+     * This function is marked const because it does not affect any member variables, such as by using
+     * nextToken().
      * @return it will either return a unaryNode containing a charNode, or it will simply return the charNode
      * without creating any new nodes or recursive chains.
      */
-    ASTNodePtr parseUnary(ASTNodePtr node);
+    ASTNodePtr parseUnary(ASTNodePtr node) const;
 
     /**
      * Handles parsing inside of groups. Has error handling included to enforce

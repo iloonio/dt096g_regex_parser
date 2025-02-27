@@ -42,21 +42,22 @@ struct CharNode : ASTNode{
 struct ORNode : ASTNode {
     ASTNodePtr left;
     ASTNodePtr right;
-    explicit ORNode(ASTNodePtr lhs, ASTNodePtr rhs);
+    explicit ORNode(ASTNodePtr lhs, ASTNodePtr rhs) : left(std::move(lhs)), right(std::move(rhs)) {};
 };
 
 struct ConcatNode : ASTNode {
     std::vector<ASTNodePtr> children;
+    explicit ConcatNode()= default;
 };
 
 struct UnaryNode : ASTNode {
     ASTNodePtr atom;
-    explicit UnaryNode(ASTNodePtr atom);
+    explicit UnaryNode(ASTNodePtr atom) : atom(std::move(atom)){};
 };
 
 struct GroupNode : ASTNode {
     ASTNodePtr expression;
-    explicit GroupNode(ASTNodePtr expression);
+    explicit GroupNode(ASTNodePtr expression) : expression(std::move(expression)){};
 };
 
 struct EOPNode : ASTNode {

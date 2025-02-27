@@ -51,29 +51,45 @@ ASTNodePtr parser::parseFactor() {
     // handle atoms here! as per grammar rules
     /*
      * if DOT:
-     *
-     * if GROUP:
-     *
+     * TODO: Implement "."!!!
      * if CASE:
+     * TODO: Implement Case insensitive!
      */
+    if (currentToken() == Tokens::GROUP_START) {
+        return parseGroup();
+    }
     if (currentToken() == Tokens::CHAR) {
         char ch = tkList.front().second;
         nextToken();
         auto charNode = std::make_unique<CharNode>(ch);
         return parseUnary(std::move(charNode));
     }
+    throw std::runtime_error("parseFactor(): unexpected token");
 }
 
-ASTNodePtr parser::parseUnary(ASTNodePtr node) {
+ASTNodePtr parser::parseUnary(ASTNodePtr node) const {
     switch (currentToken()) {
         case Tokens::KLEENE:
             auto unaryNode = std::make_unique<UnaryNode>(std::move(node));
             return unaryNode;
-        case Tokens::COUNT_START:
+        //TODO: Implement pseudocode for counter.
+        //case Tokens::COUNT_START:
+            /*
+             * while (currentToken != count_end) {
+             *      if (currentToken == Tokens::CHAR) {
+             *          std::string strNum += tkList.front().second;
+             *          nextToken();
+             *      }
+             * }
+             * int count = stoi(charNum);
+             *
+             * create unique CountingNode that stores count and is
+             * parent to an atom that precedes it in tkList.
+             */
             // ... do stuff here for counting
             break;
-        default:
-            break;
+        //default:
+        //    break;
     }
     return node;
 }

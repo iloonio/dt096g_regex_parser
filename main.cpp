@@ -74,6 +74,13 @@
  */
 
 int main() {
+
+    char c = '2';
+    std::string str = " ";
+    for (int i = 0; i < 5; ++i) {
+        str += c;
+    }
+    int num = stoi(str);
     auto list = lex(R"(lo* could.{3})");
 
     return 0;
