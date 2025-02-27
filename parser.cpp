@@ -56,6 +56,7 @@ ASTNodePtr parser::parseFactor() {
      * TODO: Implement Case insensitive!
      */
     if (currentToken() == Tokens::GROUP_START) {
+        //TODO: it is a bit redundant to call parseGroup as its own function. it can be contained inside of this function entirely.
         return parseGroup();
     }
     if (currentToken() == Tokens::CHAR) {
@@ -78,9 +79,10 @@ ASTNodePtr parser::parseUnary(ASTNodePtr node) {
                   nextToken();
                    if (currentToken() == Tokens::CHAR) {
                        strNum += tkList.front().second;
-                   } else if (currentToken() != Tokens::COUNT_END) {
-                       throw std::runtime_error("parseUnary(): unexpected token (COUNT_START case)");
                    }
+                   else if (currentToken() != Tokens::COUNT_END) {
+                      throw std::runtime_error("parseUnary(): unexpected token (COUNT_START case)");
+                  }
               }
               int count = std::stoi(strNum); //convert concatenated string to a number.
               /* create unique CountingNode that stores count and is

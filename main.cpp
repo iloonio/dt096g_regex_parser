@@ -83,5 +83,6 @@ int main() {
     int num = stoi(str);
     auto list = lex(R"(lo* could.{3})");
 
+    //TODO: Debug parser! make sure it can create an AST from a given regex pattern.
     return 0;
 }
