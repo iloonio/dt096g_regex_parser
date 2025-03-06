@@ -8,7 +8,6 @@
 #include <map>
 #include <vector>
 #include <queue>
-#include "Evaluator.h"
 #include "ast_node.h"
 
 /* <REGEXPR>    ->  <EXPR>

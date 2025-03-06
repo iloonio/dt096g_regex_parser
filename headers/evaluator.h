@@ -1,0 +1,34 @@
+//
+// Created by Terminal on 04/03/2025.
+//
+
+#ifndef E_EVAL_H
+#define E_EVAL_H
+#include "ast_node.h"
+
+//TODO: Add unique functionality if case insensitivity or capture group is included
+//      Capture group is simple, but for case insensitivity, we could utilise a flag inside of
+//      The Evaluator function that tells evaluation calls to keep that in mind.
+class Evaluator {
+public:
+    Evaluator(FlagNode root, std::string text);
+    /**
+     *
+     * @return member variable result after evaluating each node in the AST on the member variable text
+     */
+    MatchResult EvaluateTree();
+
+    /**
+     * sets result values to {"", false}
+     */
+    void resetMatchResult();
+private:
+    bool caseInsensitiveFlag;
+    std::remove_reference_t<FlagNode &> root;
+    std::string text;
+    MatchResult result;
+};
+
+
+
+#endif //E_EVAL_H

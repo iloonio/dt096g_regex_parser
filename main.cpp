@@ -1,6 +1,7 @@
+#include <fstream>
 #include <iostream>
-#include "headers/Evaluator.h"
 #include "headers/lexer.h"
+#include "headers/parser.h"
 /**
  * There are multiple approaches to this. We can either run a program, or have a token list consisting of the tokens that our
  * lexer has made. That way we dont need to lex at every point, instead we can use tokens from a list for our parsing (which
@@ -33,23 +34,38 @@
  *
  * Also: See page 183 in Concepts of Programming Languages
  *
+ * More Thoughts: A language should consist of a lexical analyzer and a Syntax analyzer.
+ * Lexical analyzers are straight-forward, while Syntax analyzers have two goals: detect syntax errors
+ * and produce a parse tree, or possibly just the information to construct the parser tree.
+ *
+ * Parsers have complexity O(n^3), but parsers for programming languages work on subclasses of
+ * unambiguous grammars and have complexity O(n).
+ *
+ * ALSO: Case-insensitive and Capture-group should always be parsed first >:( They should be the root of a given tree
+ * a solution could be to have the lexer first look after every instance of "/" to find these special tokens.
+ * Our parser can then eat these tokens the first thing it does, which saves us time by not forcing us to move everything
+ * away from queues.
  */
 
-/* <REGEX>      ->      <EXPR>
- * <EXPR>       ->      <TERM> {"+" <TERM>  }*                  (* Alternation OR *)
- * <TERM>       ->      <FACTOR>+                               (* Concatenation *)
- * <FACTOR>     ->      <ATOM> <UNARY>?                         (* Atom with optional unary operand *)
- * <ATOM>       ->      <CHAR> | <DOT> | <GROUP> | <CASE>       (* Smallest unit in expressions *)
- * <GROUP>      ->      "(" <EXPR> ")"
- * <UNARY>      ->      <STAR> | <COUNT>
+/* <REGEX>      ->      <EXPR> [CASE][CAPTURE]                                                                          DONE
+ * <EXPR>       ->      <TERM> {"+" <TERM>  }*                  (* Alternation OR *)                                    DONE
+ * <TERM>       ->      <FACTOR>+                               (* Concatenation *)                                     DONE
+ * <FACTOR>     ->      <ATOM> <UNARY>?                         (* Atom with optional unary operand *)                  DONE
+ * <ATOM>       ->      <CHAR> | <DOT> | <GROUP>                (* Smallest unit in expressions *)                      DONE
+ * <GROUP>      ->      "(" <EXPR> ")"                                                                                  DONE
+ * <UNARY>      ->      <STAR> | <COUNT>                                                                                DONE
  *
- * <STAR>       ->      "*"                                     (*One or more occurrences*)
- * <COUNT>      ->      "{" <DIGIT> "}"
- * <CASE>       ->      "/O"
- * <DOT>        ->      "."
- * <CHAR>       ->      [a-zA-Z0-9]
- * <DIGIT>      ->      [0-9]+
+ * <STAR>       ->      "*"                                     (*One or more occurrences*)                             DONE
+ * <COUNT>      ->      "{" <DIGIT> "}"                                                                                 DONE
+ * <CASE>       ->      "/I"                                                                                            WIP
+ * <CAPTURE>    ->      "/O"<COUNT>                                                                                     FORGOT :(
+ * <DOT>        ->      "."                                                                                             DONE
+ * <CHAR>       ->      [a-zA-Z0-9]                                                                                     DONE
+ * <DIGIT>      ->      [0-9]+                                                                                          DONE
  *
+ *
+ */
+/*
  * ### OLD ###
  * <EXPR>           ->     <KLEENE> | <GROUP> | <OR> | <EOP>         ;
  * <CHAR>           ->      <LETTER> [<EXPR>]   ;  //a letter and none or one instance of an <EXPR>
@@ -73,16 +89,43 @@
                             | "x" | "y" | "z" ;
  */
 
+int finalMain();
+
 int main() {
+    // Ensure the correct number of arguments
+    std::ifstream file;
+    file.open("input.txt");
+    std::string pattern = R"(\I loo \O )";
+    std::string text{};
+    std::getline(file, text);
 
-    char c = '2';
-    std::string str = " ";
-    for (int i = 0; i < 5; ++i) {
-        str += c;
-    }
-    int num = stoi(str);
-    auto list = lex(R"(lo* could.{3})");
+    auto list = lex(pattern);
 
-    //TODO: Debug parser! make sure it can create an AST from a given regex pattern.
+    parser prs(lex(R"(a+bc*)"));
+
+    //auto root = prs.parseExpr();
+
+    return 0;
+}
+
+// match "lo* could.{3}" < input.txt
+    // "lo* could.{3}" is passed as argv into the function
+    // < input.txt is redirected into std::cin, which we read from.
+int finalMain(int argc, char *argv[]) {
+    //prepare inputs
+    //TODO test that this works.
+    std::string pattern = argv[1];
+    std::string text;
+    std::getline(std::cin, text);
+
+    //lex & pass to parser
+    const auto tkList = lex(pattern);
+
+    //parse & pass to evaluator
+    parser prs(tkList);
+
+    //Evaluate & Print to console
+    auto root = prs.getRoot();
+
     return 0;
 }

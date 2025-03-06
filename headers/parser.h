@@ -19,10 +19,21 @@ public:
     Tokens currentToken() const;
 
     /**
+     * Helper function used in the while loop for parseTerm (A ducktape fix for shoddy queue management)
+     * @return if index is 2 or less, returns EOP, otherwise returns token
+     * that is one step ahead of first()
+     */
+    Tokens peekNextToken() const;
+
+    /**
      * Helper function to make parser code more readable.
      * Moves to the next token in line, consuming the previous one.
      */
     void nextToken();
+
+    ASTNodePtr getRoot();
+
+    ASTNodePtr parseRegex();
 
     /**
      * Recursive function that handles OR operands. Calls parseTerm()
@@ -46,10 +57,13 @@ public:
     ASTNodePtr parseFactor();
 
     /**
-     * This is the final function in the recursive call which constructs potential unary operands.
-     * This function is marked const because it does not affect any member variables, such as by using
-     * nextToken().
-     * @return it will either return a unaryNode containing a charNode, or it will simply return the charNode
+     * ParseUnary manages count groups and kleenestars following atomic nodes (dot and char) or flagNodes (solely count in that case), it is
+     * called from parseRegex for flagNodes, and parseFactor for atomic nodes.
+     *
+     *
+     *
+     * @return For atomic nodes: returns either a countNode or KleeneNode containing the atomic node, or it will return
+     * the parameter node as is. For FlagNodes: returns FlagNode with an updated captureCount member.
      * without creating any new nodes or recursive chains.
      */
     ASTNodePtr parseUnary(ASTNodePtr node);
@@ -61,9 +75,12 @@ public:
      */
     ASTNodePtr parseGroup();
 
+    std::unique_ptr<FlagNode> parseCaptureCount(std::unique_ptr<FlagNode> flagNode);
+
+
 private:
-    //ASTNodePtr root;
     std::queue<std::pair<Tokens, char>> tkList;
+    ASTNodePtr root;
 };
 
 
