@@ -99,15 +99,4 @@ struct GroupNode : ASTNode {
     MatchResult evaluate(size_t &index, const std::string &text, bool caseInsensitive) override;
 };
 
-/**
- * Root node for the Abstract Syntax Tree. Manages flags and with captureGroup to return.
- */
-struct FlagNode : ASTNode {
-    bool caseInsensitive;
-    int captureCount;
-    ASTNodePtr expression;
-    FlagNode(bool caseInsensitive, int captureCount);
-    MatchResult evaluate(size_t &index, const std::string &text, bool caseInsensitive) override;
-};
-
 #endif //DT096G_REGEX_PARSER_AST_NODE_H

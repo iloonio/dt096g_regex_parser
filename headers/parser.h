@@ -33,8 +33,6 @@ public:
 
     ASTNodePtr getRoot();
 
-    ASTNodePtr parseRegex();
-
     /**
      * Recursive function that handles OR operands. Calls parseTerm()
      * @return It will either return an OrNode with two recursive branches,
@@ -74,9 +72,6 @@ public:
      * @return A recursive branch starting from <EXPR>
      */
     ASTNodePtr parseGroup();
-
-    std::unique_ptr<FlagNode> parseCaptureCount(std::unique_ptr<FlagNode> flagNode);
-
 
 private:
     std::queue<std::pair<Tokens, char>> tkList;

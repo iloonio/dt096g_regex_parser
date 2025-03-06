@@ -11,20 +11,8 @@
 //      The Evaluator function that tells evaluation calls to keep that in mind.
 class Evaluator {
 public:
-    Evaluator(FlagNode root, std::string text);
-    /**
-     *
-     * @return member variable result after evaluating each node in the AST on the member variable text
-     */
-    MatchResult EvaluateTree();
-
-    /**
-     * sets result values to {"", false}
-     */
-    void resetMatchResult();
+    Evaluator(const std::string &text, const MatchResult &result);
 private:
-    bool caseInsensitiveFlag;
-    std::remove_reference_t<FlagNode &> root;
     std::string text;
     MatchResult result;
 };

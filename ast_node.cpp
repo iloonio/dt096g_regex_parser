@@ -102,18 +102,3 @@ GroupNode::GroupNode(ASTNodePtr expression) : expression(std::move(expression)) 
 MatchResult GroupNode::evaluate(size_t &index, const std::string &text, const bool caseInsensitive) {
     return expression->evaluate(index, text, caseInsensitive);
 }
-
-
-FlagNode::FlagNode(const bool caseInsensitive, const int captureCount): caseInsensitive(caseInsensitive),
-                                                            captureCount(captureCount) {}
-
-MatchResult FlagNode::evaluate(size_t &index, const std::string &text, const bool caseInsensitive) {
-    MatchResult behavior = expression->evaluate(index, text, caseInsensitive);
-    //Eval child node x many times, based on our internal captureCount
-    for (size_t i = 0; i < captureCount; i++) {
-        index = 0;
-        behavior = expression->evaluate(index, text, caseInsensitive);
-    }
-    //the internal case-insensitive flag is managed inside evaluator's constructor.
-    return behavior;
-}

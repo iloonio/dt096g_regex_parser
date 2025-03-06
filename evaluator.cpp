@@ -6,21 +6,5 @@
 
 #include "headers/evaluator.h"
 
-Evaluator::Evaluator(FlagNode root, std::string text) : caseInsensitiveFlag(root.caseInsensitive),
-                                                        root(std::move(root)),
-                                                        text(std::move(text)),
-                                                        result("", false) {
-}
-
-MatchResult Evaluator::EvaluateTree() {
-    size_t index = 0;
-    resetMatchResult();
-    while (index < text.size() || !result.exit) {
-        result = root.evaluate(index, text, caseInsensitiveFlag);
-    }
-    return result;
-}
-
-void Evaluator::resetMatchResult() {
-    result = {"", false};
+Evaluator::Evaluator(const std::string &text, const MatchResult &result) : text(text), result(result) {
 }
