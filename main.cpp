@@ -57,53 +57,42 @@
  *
  * <STAR>       ->      "*"                                     (*One or more occurrences*)                             DONE
  * <COUNT>      ->      "{" <DIGIT> "}"                                                                                 DONE
- * <CASE>       ->      "/I"                                                                                            WIP
- * <CAPTURE>    ->      "/O"<COUNT>                                                                                     FORGOT :(
+ * <CASE>       ->      "/I"                                                                                            NOT IN CURRENT BRANCH
+ * <CAPTURE>    ->      "/O"<COUNT>                                                                                     NOT IN CURRENT BRANCH
  * <DOT>        ->      "."                                                                                             DONE
  * <CHAR>       ->      [a-zA-Z0-9]                                                                                     DONE
  * <DIGIT>      ->      [0-9]+                                                                                          DONE
  *
  *
  */
-/*
- * ### OLD ###
- * <EXPR>           ->     <KLEENE> | <GROUP> | <OR> | <EOP>         ;
- * <CHAR>           ->      <LETTER> [<EXPR>]   ;  //a letter and none or one instance of an <EXPR>
- * <EOP>            ->     End of Code         ;
- *
- * <OR>             ->      <EXPR> '+' <EXPR>   ; //Binary operand, requires two expressions
- *                                                //OR is incorect here, as n
- *
- * <KLEENE>         ->      <EXPR>'*'           ; //Primary operand, requires one expression ahead of itself
- * <GROUP>          ->      '(' <EXPR> ')'      ; //grouping operand.
- *
- *
- * ## Supporting grammar
- * <LETTER>         ->        "A" | "B" | "C" | "D" | "E" | "F" | "G"
-                            | "H" | "I" | "J" | "K" | "L" | "M" | "N"
-                            | "O" | "P" | "Q" | "R" | "S" | "T" | "U"
-                            | "V" | "W" | "X" | "Y" | "Z" | "a" | "b"
-                            | "c" | "d" | "e" | "f" | "g" | "h" | "i"
-                            | "j" | "k" | "l" | "m" | "n" | "o" | "p"
-                            | "q" | "r" | "s" | "t" | "u" | "v" | "w"
-                            | "x" | "y" | "z" ;
- */
 
 int finalMain();
 
-int main() {
+/**
+ * @param argc Short for Argument Count. Keeps track of number of arguments provided
+ *
+ * @param argv Short for Argument ???. This is the regex pattern
+ *
+ * On top of these, the function also takes in a file stream std::cin
+ *
+ * @return 0 for a successful execution
+ */
+int main(int argc, char *argv[]) {
     // Ensure the correct number of arguments
-    std::ifstream file;
-    file.open("input.txt");
-    std::string pattern = R"(\I loo \O )";
-    std::string text{};
-    std::getline(file, text);
 
-    auto list = lex(pattern);
+    std::string pattern;
 
-    parser prs(lex(R"(a+bc*)"));
+    if (argc > 1) {
+        pattern = argv[1];
+    } else {
+        std::cerr << "Usage: match <pattern> < input.txt>" << std::endl;
+        return 1;
+    }
 
-    //auto root = prs.parseExpr();
+    std::string text;
+    std::getline(std::cin, text);
+
+    std::cout << pattern <<'\n' << text << std::endl;
 
     return 0;
 }
@@ -111,21 +100,3 @@ int main() {
 // match "lo* could.{3}" < input.txt
     // "lo* could.{3}" is passed as argv into the function
     // < input.txt is redirected into std::cin, which we read from.
-int finalMain(int argc, char *argv[]) {
-    //prepare inputs
-    //TODO test that this works.
-    std::string pattern = argv[1];
-    std::string text;
-    std::getline(std::cin, text);
-
-    //lex & pass to parser
-    const auto tkList = lex(pattern);
-
-    //parse & pass to evaluator
-    parser prs(tkList);
-
-    //Evaluate & Print to console
-    auto root = prs.getRoot();
-
-    return 0;
-}

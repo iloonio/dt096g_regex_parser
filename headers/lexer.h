@@ -27,8 +27,6 @@ enum Tokens {
     DOT,
     COUNT_START,
     COUNT_END,
-    CASE,
-    OUTPUT,
     CHAR,
     DIGIT,
     EOP,

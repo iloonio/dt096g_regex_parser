@@ -5,6 +5,3 @@
 #include <utility>
 
 #include "headers/evaluator.h"
-
-Evaluator::Evaluator(const std::string &text, const MatchResult &result) : text(text), result(result) {
-}

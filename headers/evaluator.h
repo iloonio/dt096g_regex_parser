@@ -10,11 +10,6 @@
 //      Capture group is simple, but for case insensitivity, we could utilise a flag inside of
 //      The Evaluator function that tells evaluation calls to keep that in mind.
 class Evaluator {
-public:
-    Evaluator(const std::string &text, const MatchResult &result);
-private:
-    std::string text;
-    MatchResult result;
 };
 
 

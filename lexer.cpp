@@ -7,25 +7,6 @@
 
 std::queue<std::pair<Tokens, char>> lex(std::string regex) {
     std::queue<std::pair <Tokens, char>> tokens;
-
-    //First, lex for all cases of "\", then do the rest of the lexing.
-    for (auto p = regex.begin(); p != regex.end(); ++p) {
-        if (*p == '\\') {
-            auto startPos = p;
-            ++p;
-            if (*p =='I') {
-                tokens.emplace(CASE, *p);
-            }
-            else if (*p == 'O') {
-                tokens.emplace(OUTPUT, *p);
-            } else {
-                std::cerr << "invalid regex: Expected 'I' or 'O' after '/'." << std::endl;
-                break;
-            }
-            p = regex.erase(startPos, p+1);
-        }
-    }
-
     auto p = regex.begin();
     while (p != regex.end()) {
         switch (*p) {
