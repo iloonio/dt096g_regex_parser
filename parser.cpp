@@ -53,20 +53,24 @@ ASTNodePtr parser::parseExpr() {
 }
 
 ASTNodePtr parser::parseTerm() {
-    auto left = parseFactor();
+    std::vector<ASTNodePtr> factors;
+
+    factors.push_back(parseFactor());
 
     while ( // This loop will go on until we capture every possible factor.
         currentToken() != Tokens::OR and
         currentToken() != Tokens::GROUP_END and
         peekNextToken() != Tokens::EOP
     ) {
-        auto right = parseFactor();
-        auto concatNode = std::make_unique<ConcatNode>();
-        concatNode->children.push_back(std::move(left));
-        concatNode->children.push_back(std::move(right));
-        left = std::move(concatNode);
+        factors.push_back(parseFactor());
     }
-    return left;
+
+    if (factors.size() == 1) {
+        return std::move(factors.front());
+    }
+    auto concatNode = std::make_unique<ConcatNode>();
+    concatNode->children = std::move(factors);
+    return concatNode;
 }
 
 ASTNodePtr parser::parseFactor() {

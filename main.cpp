@@ -3,11 +3,11 @@
 #include "headers/lexer.h"
 #include "headers/parser.h"
 /**
- * There are multiple approaches to this. We can either run a program, or have a token list consisting of the tokens that our
- * lexer has made. That way we dont need to lex at every point, instead we can use tokens from a list for our parsing (which
+ * There are multiple approaches to this. We can either run a program or have a token list consisting of the tokens that our
+ * lexer has made. That way we don't need to lex at every point, instead we can use tokens from a list for our parsing (which
  * will create the abstract syntax tree).
  *
- * Define a Grammar of operands (<CHAR>, <OR>, etc) which are
+ * Define a Grammar of operands (<CHAR>, <OR>etc.) which are
  * Lexer will breakdown the input string into a Token List.
  * We will then sequentially run through this list with our Parser/parse function to build an abstract syntax tree.
  *
@@ -20,7 +20,7 @@
  *
  *
  *
- * To avoid parentheses, it is assumed that the Kleene star has the highest priority followed by concatenation,
+ * To avoid parentheses; it is assumed that the Kleene star has the highest priority followed by concatenation,
  * then alternation. If there is no ambiguity, then parentheses may be omitted.
  * //https://en.wikipedia.org/wiki/Regular_expression
  *
@@ -66,8 +66,6 @@
  *
  */
 
-int finalMain();
-
 /**
  * @param argc Short for Argument Count. Keeps track of number of arguments provided
  *
@@ -92,7 +90,9 @@ int main(const int argc, char *argv[]) {
     std::string text;
     std::getline(std::cin, text);
 
-    auto tokens = lex(pattern);
+    const auto tokens = lex(pattern);
+
+    parser parser(tokens);
 
     std::cout << pattern <<'\n' << text << std::endl;
 
