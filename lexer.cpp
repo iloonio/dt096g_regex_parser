@@ -46,7 +46,5 @@ std::queue<std::pair<Tokens, char>> lex(std::string regex) {
         //begin at the start of the string and treat each case
         ++p; //move on to the next char
     }
-
-    tokens.emplace(EOP, '_');
     return tokens;
 }

@@ -12,6 +12,7 @@ Parser::Parser(std::queue<std::pair<Tokens, char> > tokens) : tkList(std::move(t
                                                               root(parseExpr()) {
 }
 
+//TODO:: This is currently broken! causes seg fault for some reason?
 Tokens Parser::currentToken() const {
     if (!tkList.empty()) {
         return tkList.front().first;
@@ -93,7 +94,9 @@ ASTNodePtr Parser::parseUnary(ASTNodePtr node) {
     switch (currentToken()) {
         case Tokens::KLEENE: {
             auto unaryNode = std::make_unique<KleeneNode>(std::move(node));
+            nextToken();
             return unaryNode;
+
         }
         case Tokens::COUNT_START: {
             std::string strNum;

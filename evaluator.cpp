@@ -8,10 +8,11 @@
 
 Evaluator::Evaluator(std::string text, ASTNodePtr root) :   text(std::move(text)),
                                                             root(std::move(root)),
-                                                            match(evaluate()) {}
+                                                            match({"", false}) {}
 
-MatchResult Evaluator::evaluate() {
+void Evaluator::evaluate() {
     size_t index = 0;
-    root->evaluate(index, text, true);
-    return match;
+    while (match.exit == false and index < text.size()) {
+        match = root->evaluate(index, text);
+    }
 }

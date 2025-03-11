@@ -1,5 +1,7 @@
 #include <fstream>
 #include <iostream>
+
+#include "headers/evaluator.h"
 #include "headers/lexer.h"
 #include "headers/parser.h"
 /**
@@ -93,6 +95,10 @@ int main(const int argc, char *argv[]) {
     const auto tokens = lex(pattern);
 
     Parser parser(tokens);
+
+    Evaluator evaluator(text, parser.getRoot());
+
+    evaluator.evaluate();
 
     std::cout << pattern <<'\n' << text << std::endl;
 

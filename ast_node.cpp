@@ -9,6 +9,12 @@
 CharNode::CharNode(char c): c(c) {
 }
 
+/**
+ * @brief works as intended!
+ * @param index
+ * @param text
+ * @return
+ */
 MatchResult CharNode::evaluate(size_t &index, const std::string &text) {
     const char c = text[index];
     index++;
@@ -46,12 +52,18 @@ MatchResult ORNode::evaluate(size_t &index, const std::string &text) {
 
 ConcatNode::ConcatNode() = default;
 
+/**
+ * @brief works as intended!
+ * @param index
+ * @param text
+ * @return empty result if any of the children returns no result
+ */
 MatchResult ConcatNode::evaluate(size_t &index, const std::string &text) {
     std::string concatenation{};
 
     for (const ASTNodePtr &node: children) {
         //Unique Pointers cannot be copied, only moved. We pass by ref
-        if (const MatchResult eval = node->evaluate(index, text); eval.exit == false) {
+        if (MatchResult eval = node->evaluate(index, text); eval.exit == false) {
             return eval; //returns {"", false}
         } else {
             concatenation += eval.match;
@@ -65,16 +77,25 @@ MatchResult ConcatNode::evaluate(size_t &index, const std::string &text) {
 KleeneNode::KleeneNode(ASTNodePtr atom) : atom(std::move(atom)) {
 }
 
+/**
+ * Presumably works as intended...
+ * @param index
+ * @param text
+ * @return
+ */
 MatchResult KleeneNode::evaluate(size_t &index, const std::string &text) {
     std::string concatenation;
     MatchResult eval = atom->evaluate(index, text);
-
+    if (eval.exit == false) {
+        return eval;
+    }
+    concatenation += eval.match;
     while (eval.exit == true) {
         eval = atom->evaluate(index, text);
         concatenation += eval.match;
     }
 
-    return eval;
+    return {concatenation, true};
 }
 
 

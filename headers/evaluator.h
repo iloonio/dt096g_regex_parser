@@ -9,9 +9,10 @@
 
 //TODO: Create your evaluator class that will run evaluation functions.
 class Evaluator {
+public:
     Evaluator(std::string text, ASTNodePtr root);
 
-    MatchResult evaluate();
+    void evaluate();
 private:
     std::string text;
     ASTNodePtr root;
