@@ -77,7 +77,7 @@ int finalMain();
  *
  * @return 0 for a successful execution
  */
-int main(int argc, char *argv[]) {
+int main(const int argc, char *argv[]) {
     // Ensure the correct number of arguments
 
     std::string pattern;
@@ -91,6 +91,8 @@ int main(int argc, char *argv[]) {
 
     std::string text;
     std::getline(std::cin, text);
+
+    auto tokens = lex(pattern);
 
     std::cout << pattern <<'\n' << text << std::endl;
 
