@@ -4,10 +4,18 @@
 
 #ifndef EVALUATOR_H
 #define EVALUATOR_H
+#include "ast_node.h"
 
 
-
+//TODO: Create your evaluator class that will run evaluation functions.
 class Evaluator {
+    Evaluator(std::string text, ASTNodePtr root);
+
+    MatchResult evaluate();
+private:
+    std::string text;
+    ASTNodePtr root;
+    MatchResult match;
 
 };
 

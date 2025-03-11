@@ -9,8 +9,7 @@
 CharNode::CharNode(char c): c(c) {
 }
 
-
-MatchResult CharNode::evaluate(size_t &index, const std::string &text, bool caseInsensitive) {
+MatchResult CharNode::evaluate(size_t &index, const std::string &text,) {
     const char c = text[index];
     index++;
     if (c == this->c) {
@@ -19,9 +18,10 @@ MatchResult CharNode::evaluate(size_t &index, const std::string &text, bool case
     return {"", false};
 }
 
+
 DotNode::DotNode() = default;
 
-MatchResult DotNode::evaluate(size_t &index, const std::string &text, bool caseInsensitive) {
+MatchResult DotNode::evaluate(size_t &index, const std::string &text,) {
     if (index < text.size()) {
         return {std::string(1, text[index]), true};
     }
@@ -32,12 +32,12 @@ MatchResult DotNode::evaluate(size_t &index, const std::string &text, bool caseI
 ORNode::ORNode(ASTNodePtr lhs, ASTNodePtr rhs) : left(std::move(lhs)), right(std::move(rhs)) {
 }
 
-MatchResult ORNode::evaluate(size_t &index, const std::string &text, const bool caseInsensitive) {
+MatchResult ORNode::evaluate(size_t &index, const std::string &text, const) {
     size_t rhsIndex = index; //stores an instance of index before a call chain has been invoked
 
-    MatchResult lhs = left->evaluate(index, text, caseInsensitive);
+    MatchResult lhs = left->evaluate(index, text);
     if (lhs.exit == false) {
-        return right->evaluate(rhsIndex, text, caseInsensitive);
+        return right->evaluate(rhsIndex, text);
     }
 
     return lhs;
@@ -46,12 +46,12 @@ MatchResult ORNode::evaluate(size_t &index, const std::string &text, const bool 
 
 ConcatNode::ConcatNode() = default;
 
-MatchResult ConcatNode::evaluate(size_t &index, const std::string &text, const bool caseInsensitive) {
+MatchResult ConcatNode::evaluate(size_t &index, const std::string &text, const) {
     std::string concatenation{};
 
     for (const ASTNodePtr &node: children) {
         //Unique Pointers cannot be copied, only moved. We pass by ref
-        if (const MatchResult eval = node->evaluate(index, text, caseInsensitive); eval.exit == false) {
+        if (const MatchResult eval = node->evaluate(index, text); eval.exit == false) {
             return eval; //returns {"", false}
         } else {
             concatenation += eval.match;
@@ -65,12 +65,12 @@ MatchResult ConcatNode::evaluate(size_t &index, const std::string &text, const b
 KleeneNode::KleeneNode(ASTNodePtr atom) : atom(std::move(atom)) {
 }
 
-MatchResult KleeneNode::evaluate(size_t &index, const std::string &text, const bool caseInsensitive) {
+MatchResult KleeneNode::evaluate(size_t &index, const std::string &text, const) {
     std::string concatenation;
-    MatchResult eval = atom->evaluate(index, text, caseInsensitive);
+    MatchResult eval = atom->evaluate(index, text);
 
     while (eval.exit == true) {
-        eval = atom->evaluate(index, text, caseInsensitive);
+        eval = atom->evaluate(index, text);
         concatenation += eval.match;
     }
 
@@ -81,12 +81,12 @@ MatchResult KleeneNode::evaluate(size_t &index, const std::string &text, const b
 CountNode::CountNode(ASTNodePtr atom, const int count) : atom(std::move(atom)), count(count) {
 }
 
-MatchResult CountNode::evaluate(size_t &index, const std::string &text, const bool caseInsensitive) {
+MatchResult CountNode::evaluate(size_t &index, const std::string &text, const) {
     std::string concatenation;
     MatchResult eval = {"", false};
 
     for (int i = 0; i < count; i++) {
-        eval = atom->evaluate(index, text, caseInsensitive);
+        eval = atom->evaluate(index, text);
         if (eval.exit == false) {
             return eval;
         }
@@ -99,6 +99,6 @@ MatchResult CountNode::evaluate(size_t &index, const std::string &text, const bo
 GroupNode::GroupNode(ASTNodePtr expression) : expression(std::move(expression)) {
 }
 
-MatchResult GroupNode::evaluate(size_t &index, const std::string &text, const bool caseInsensitive) {
-    return expression->evaluate(index, text, caseInsensitive);
+MatchResult GroupNode::evaluate(size_t &index, const std::string &text, const) {
+    return expression->evaluate(index, text);
 }

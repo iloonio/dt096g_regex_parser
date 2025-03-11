@@ -29,7 +29,7 @@ struct MatchResult {
  * to produce behavior. This class is abstract and is inherited by all other Node types.
  */
 struct ASTNode {
-    virtual MatchResult evaluate(size_t &index, const std::string &text, bool caseInsensitive) = 0;
+    virtual MatchResult evaluate(size_t &index, const std::string &text) = 0;
     virtual ~ASTNode()= default;
 };
 
@@ -40,7 +40,7 @@ struct CharNode : ASTNode{
     char c;
     //Constructor for CharNode
     explicit CharNode(char c);
-    MatchResult evaluate(size_t &index, const std::string &text, bool caseInsensitive) override;
+    MatchResult evaluate(size_t &index, const std::string &text) override;
 };
 
 /**
@@ -48,7 +48,7 @@ struct CharNode : ASTNode{
  */
 struct DotNode : ASTNode {
     explicit DotNode();
-    MatchResult evaluate(size_t &index, const std::string &text, bool caseInsensitive) override;
+    MatchResult evaluate(size_t &index, const std::string &text) override;
 };
 
 /**
@@ -59,7 +59,7 @@ struct ORNode : ASTNode {
     ASTNodePtr left;
     ASTNodePtr right;
     explicit ORNode(ASTNodePtr lhs, ASTNodePtr rhs);
-    MatchResult evaluate(size_t &index, const std::string &text, bool caseInsensitive) override;
+    MatchResult evaluate(size_t &index, const std::string &text) override;
 };
 
 /**
@@ -68,7 +68,7 @@ struct ORNode : ASTNode {
 struct ConcatNode : ASTNode {
     std::vector<ASTNodePtr> children;
     explicit ConcatNode();
-    MatchResult evaluate(size_t &index, const std::string &text, bool caseInsensitive) override;
+    MatchResult evaluate(size_t &index, const std::string &text) override;
 };
 
 /**
@@ -77,7 +77,7 @@ struct ConcatNode : ASTNode {
 struct KleeneNode : ASTNode {
     ASTNodePtr atom;
     explicit KleeneNode(ASTNodePtr atom);
-    MatchResult evaluate(size_t &index, const std::string &text, bool caseInsensitive) override;
+    MatchResult evaluate(size_t &index, const std::string &text) override;
 };
 
 /**
@@ -87,7 +87,7 @@ struct CountNode : ASTNode {
     ASTNodePtr atom;
     int count;
     explicit CountNode(ASTNodePtr atom, int count);
-    MatchResult evaluate(size_t &index, const std::string &text, bool caseInsensitive) override;
+    MatchResult evaluate(size_t &index, const std::string &text) override;
 };
 
 /**
@@ -96,7 +96,7 @@ struct CountNode : ASTNode {
 struct GroupNode : ASTNode {
     ASTNodePtr expression;
     explicit GroupNode(ASTNodePtr expression);
-    MatchResult evaluate(size_t &index, const std::string &text, bool caseInsensitive) override;
+    MatchResult evaluate(size_t &index, const std::string &text) override;
 };
 
 #endif //DT096G_REGEX_PARSER_AST_NODE_H
