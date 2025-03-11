@@ -8,18 +8,18 @@
 #include <fstream>
 #include <sstream>
 
-parser::parser(std::queue<std::pair<Tokens, char> > tokens) : tkList(std::move(tokens)),
+Parser::Parser(std::queue<std::pair<Tokens, char> > tokens) : tkList(std::move(tokens)),
                                                               root(parseExpr()) {
 }
 
-Tokens parser::currentToken() const {
+Tokens Parser::currentToken() const {
     if (!tkList.empty()) {
         return tkList.front().first;
     }
     return Tokens::EOP;
 }
 
-Tokens parser::peekNextToken() const {
+Tokens Parser::peekNextToken() const {
     if (tkList.size() <= 2) {
         return Tokens::EOP;
     }
@@ -28,20 +28,17 @@ Tokens parser::peekNextToken() const {
     return temp.front().first;
 }
 
-void parser::nextToken() {
+void Parser::nextToken() {
     if (!tkList.empty()) {
         tkList.pop();
     }
 }
 
-ASTNodePtr parser::getRoot() {
+ASTNodePtr Parser::getRoot() {
     return std::move(root);
 }
 
-//TODO: Debug this!!!
-//TODO: see if you can remake these nasty nested-ifs into something more presentable.
-
-ASTNodePtr parser::parseExpr() {
+ASTNodePtr Parser::parseExpr() {
     auto left = parseTerm();
     while (currentToken() == Tokens::OR) {
         nextToken();
@@ -52,7 +49,7 @@ ASTNodePtr parser::parseExpr() {
     return left;
 }
 
-ASTNodePtr parser::parseTerm() {
+ASTNodePtr Parser::parseTerm() {
     std::vector<ASTNodePtr> factors;
 
     factors.push_back(parseFactor());
@@ -73,7 +70,7 @@ ASTNodePtr parser::parseTerm() {
     return concatNode;
 }
 
-ASTNodePtr parser::parseFactor() {
+ASTNodePtr Parser::parseFactor() {
     // handle atoms here! as per grammar rules
     if (currentToken() == Tokens::DOT) {
         nextToken();
@@ -92,7 +89,7 @@ ASTNodePtr parser::parseFactor() {
     throw std::runtime_error("parseFactor(): unexpected token");
 }
 
-ASTNodePtr parser::parseUnary(ASTNodePtr node) {
+ASTNodePtr Parser::parseUnary(ASTNodePtr node) {
     switch (currentToken()) {
         case Tokens::KLEENE: {
             auto unaryNode = std::make_unique<KleeneNode>(std::move(node));
@@ -119,7 +116,7 @@ ASTNodePtr parser::parseUnary(ASTNodePtr node) {
     return node;
 }
 
-ASTNodePtr parser::parseGroup() {
+ASTNodePtr Parser::parseGroup() {
     nextToken();
     auto groupNode = std::make_unique<GroupNode>(parseExpr());
     if (currentToken() == Tokens::GROUP_END) {

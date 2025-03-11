@@ -5,25 +5,24 @@
 #ifndef DT096G_REGEX_PARSER_PARSER_H
 #define DT096G_REGEX_PARSER_PARSER_H
 #include <memory>
-#include <sstream>
 #include "ast_node.h"
 #include "lexer.h"
-class parser {
+class Parser {
 public:
-    explicit parser(std::queue<std::pair<Tokens, char>> tokens);
+    explicit Parser(std::queue<std::pair<Tokens, char>> tokens);
 
     /**
      * Helper function to make parser code more readable
      * @return current token that the parser is on, without consuming it
      */
-    Tokens currentToken() const;
+    [[nodiscard]] Tokens currentToken() const;
 
     /**
      * Helper function used in the while loop for parseTerm (A ducktape fix for shoddy queue management)
      * @return if index is 2 or less, returns EOP, otherwise returns token
      * that is one step ahead of first()
      */
-    Tokens peekNextToken() const;
+    [[nodiscard]] Tokens peekNextToken() const;
 
     /**
      * Helper function to make parser code more readable.

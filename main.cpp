@@ -92,7 +92,7 @@ int main(const int argc, char *argv[]) {
 
     const auto tokens = lex(pattern);
 
-    parser parser(tokens);
+    Parser parser(tokens);
 
     std::cout << pattern <<'\n' << text << std::endl;
 
