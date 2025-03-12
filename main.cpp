@@ -47,6 +47,9 @@
  * a solution could be to have the lexer first look after every instance of "/" to find these special tokens.
  * Our parser can then eat these tokens the first thing it does, which saves us time by not forcing us to move everything
  * away from queues.
+ *
+ * 12/03/2025: Running into an issue where inputting ".*" instead returns cmake (which is not good!). This can be
+ * circumvented by instead inputting '.*' but I haven't tested this for ubuntu.
  */
 
 /* <REGEX>      ->      <EXPR> [CASE][CAPTURE]                                                                          DONE

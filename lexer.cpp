@@ -37,8 +37,11 @@ std::queue<std::pair<Tokens, char>> lex(std::string regex) {
                 }
                 else if (isdigit(*p)) {
                     tokens.emplace(Tokens::DIGIT, *p);
+                }
+                else if (*p == '\'') {
+                    break; //We want to ignore this case.
                 } else {
-                    std::cerr << "invalid char in regex." << std::endl;
+                    std::cerr << "lexer(): invalid char in regex." << std::endl;
                 }
                 break;
         }

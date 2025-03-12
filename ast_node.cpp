@@ -26,10 +26,10 @@ KleeneNode::KleeneNode(ASTNodePtr atom) : atom(std::move(atom)) {
 }
 
 /**
- * @brief works as intended!
- * @param index
- * @param text
- * @return
+ * @brief Moves forward index and evaluates if the current index matches the character inside this CharNode.
+ * @param index current index
+ * @param text text whose index will be checked
+ * @return MatchResult containing matched char and a true statement (no char and false if no match was found)
  */
 MatchResult CharNode::evaluate(size_t &index, const std::string &text) {
     const char ch = text[index];
@@ -42,12 +42,15 @@ MatchResult CharNode::evaluate(size_t &index, const std::string &text) {
 
 
 MatchResult DotNode::evaluate(size_t &index, const std::string &text) {
+    MatchResult result = {"", false};
     const char c = text[index];
-    index++;
+
     if (index < text.size()) {
-        return {std::string(1, c), true};
+        result = {std::string(1, c), true};
     }
-    return {"", false};
+
+    index++;
+    return result;
 }
 
 
@@ -90,7 +93,8 @@ MatchResult KleeneNode::evaluate(size_t &index, const std::string &text) {
         eval = atom->evaluate(index, text);
         concatenation += eval.match;
     }
-    index--; //returns index to previous value after failed match. This is because Chars and Dots move the index forward.
+    index--;
+    //Returns index to previous value after failed match. This is because Chars and Dots move the index forward.
     return {concatenation, true};
 }
 
@@ -108,7 +112,6 @@ MatchResult CountNode::evaluate(size_t &index, const std::string &text) {
     }
     return {concatenation, true};
 }
-
 
 
 
