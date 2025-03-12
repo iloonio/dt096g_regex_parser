@@ -21,7 +21,7 @@ Tokens Parser::currentToken() const {
 }
 
 Tokens Parser::peekNextToken() const {
-    if (tkList.size() <= 2) {
+    if (tkList.size() < 1) {
         return Tokens::EOP;
     }
     auto temp = tkList;
@@ -58,7 +58,7 @@ ASTNodePtr Parser::parseTerm() {
     while ( // This loop will go on until we capture every possible factor.
         currentToken() != Tokens::OR and
         currentToken() != Tokens::GROUP_END and
-        peekNextToken() != Tokens::EOP
+        currentToken() != Tokens::EOP
     ) {
         factors.push_back(parseFactor());
     }

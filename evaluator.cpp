@@ -6,6 +6,8 @@
 
 #include "headers/evaluator.h"
 
+#include <iostream>
+
 Evaluator::Evaluator(std::string text, ASTNodePtr root) :   text(std::move(text)),
                                                             root(std::move(root)),
                                                             match({"", false}) {}
@@ -15,4 +17,9 @@ void Evaluator::evaluate() {
     while (match.exit == false and index < text.size()) {
         match = root->evaluate(index, text);
     }
+}
+
+void Evaluator::printMatch() const {
+    std::cout << std::boolalpha;
+    std::cout << match.match << '\n' << match.exit << std::endl;
 }

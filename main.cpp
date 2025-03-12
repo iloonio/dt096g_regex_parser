@@ -102,6 +102,8 @@ int main(const int argc, char *argv[]) {
 
     std::cout << pattern <<'\n' << text << std::endl;
 
+    evaluator.printMatch();
+
     return 0;
 }
 

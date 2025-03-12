@@ -13,6 +13,8 @@ public:
     Evaluator(std::string text, ASTNodePtr root);
 
     void evaluate();
+
+    void printMatch() const;
 private:
     std::string text;
     ASTNodePtr root;

@@ -28,8 +28,10 @@ MatchResult CharNode::evaluate(size_t &index, const std::string &text) {
 DotNode::DotNode() = default;
 
 MatchResult DotNode::evaluate(size_t &index, const std::string &text) {
+    const char c = text[index];
+    index++;
     if (index < text.size()) {
-        return {std::string(1, text[index]), true};
+        return {std::string(1, c), true};
     }
     return {"", false};
 }
