@@ -9,6 +9,22 @@
 CharNode::CharNode(char c): c(c) {
 }
 
+DotNode::DotNode() = default;
+
+ORNode::ORNode(ASTNodePtr lhs, ASTNodePtr rhs) : left(std::move(lhs)), right(std::move(rhs)) {
+}
+
+ConcatNode::ConcatNode() = default;
+
+GroupNode::GroupNode(ASTNodePtr expression) : expression(std::move(expression)) {
+}
+
+CountNode::CountNode(ASTNodePtr atom, const int count) : atom(std::move(atom)), count(count) {
+}
+
+KleeneNode::KleeneNode(ASTNodePtr atom) : atom(std::move(atom)) {
+}
+
 /**
  * @brief works as intended!
  * @param index
@@ -16,16 +32,14 @@ CharNode::CharNode(char c): c(c) {
  * @return
  */
 MatchResult CharNode::evaluate(size_t &index, const std::string &text) {
-    const char c = text[index];
+    const char ch = text[index];
     index++;
-    if (c == this->c) {
-        return {std::string(1, c), true};
+    if (ch == this->c) {
+        return {std::string(1, ch), true};
     }
     return {"", false};
 }
 
-
-DotNode::DotNode() = default;
 
 MatchResult DotNode::evaluate(size_t &index, const std::string &text) {
     const char c = text[index];
@@ -36,9 +50,6 @@ MatchResult DotNode::evaluate(size_t &index, const std::string &text) {
     return {"", false};
 }
 
-
-ORNode::ORNode(ASTNodePtr lhs, ASTNodePtr rhs) : left(std::move(lhs)), right(std::move(rhs)) {
-}
 
 MatchResult ORNode::evaluate(size_t &index, const std::string &text) {
     size_t rhsIndex = index; //stores an instance of index before a call chain has been invoked
@@ -52,9 +63,6 @@ MatchResult ORNode::evaluate(size_t &index, const std::string &text) {
 }
 
 
-ConcatNode::ConcatNode() = default;
-
-//TODO: Check if this handles spaces correctly. it might be related to CharNode
 MatchResult ConcatNode::evaluate(size_t &index, const std::string &text) {
     std::string concatenation{};
 
@@ -71,10 +79,6 @@ MatchResult ConcatNode::evaluate(size_t &index, const std::string &text) {
 }
 
 
-KleeneNode::KleeneNode(ASTNodePtr atom) : atom(std::move(atom)) {
-}
-
-
 MatchResult KleeneNode::evaluate(size_t &index, const std::string &text) {
     std::string concatenation;
     MatchResult eval = atom->evaluate(index, text);
@@ -86,13 +90,10 @@ MatchResult KleeneNode::evaluate(size_t &index, const std::string &text) {
         eval = atom->evaluate(index, text);
         concatenation += eval.match;
     }
-
+    index--; //returns index to previous value after failed match. This is because Chars and Dots move the index forward.
     return {concatenation, true};
 }
 
-
-CountNode::CountNode(ASTNodePtr atom, const int count) : atom(std::move(atom)), count(count) {
-}
 
 MatchResult CountNode::evaluate(size_t &index, const std::string &text) {
     std::string concatenation;
@@ -109,8 +110,7 @@ MatchResult CountNode::evaluate(size_t &index, const std::string &text) {
 }
 
 
-GroupNode::GroupNode(ASTNodePtr expression) : expression(std::move(expression)) {
-}
+
 
 MatchResult GroupNode::evaluate(size_t &index, const std::string &text) {
     return expression->evaluate(index, text);
