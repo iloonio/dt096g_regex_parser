@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="match &quot;lo* could.{3}&quot;" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="&quot;lo* could.{3}&quot;" REDIRECT_INPUT="true" REDIRECT_INPUT_PATH="$PROJECT_DIR$/cmake-build-debug/input.txt" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="dt096g_regex_parser" TARGET_NAME="match" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="dt096g_regex_parser" RUN_TARGET_NAME="match">
+  <configuration default="false" name="match &quot;lo* could.{3}&quot;" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="&quot;lo* &quot;" REDIRECT_INPUT="true" REDIRECT_INPUT_PATH="$PROJECT_DIR$/cmake-build-debug/input.txt" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="dt096g_regex_parser" TARGET_NAME="match" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="dt096g_regex_parser" RUN_TARGET_NAME="match">
     <method v="2">
       <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
     </method>

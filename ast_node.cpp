@@ -54,12 +54,7 @@ MatchResult ORNode::evaluate(size_t &index, const std::string &text) {
 
 ConcatNode::ConcatNode() = default;
 
-/**
- * @brief works as intended!
- * @param index
- * @param text
- * @return empty result if any of the children returns no result
- */
+//TODO: Check if this handles spaces correctly. it might be related to CharNode
 MatchResult ConcatNode::evaluate(size_t &index, const std::string &text) {
     std::string concatenation{};
 
@@ -79,12 +74,7 @@ MatchResult ConcatNode::evaluate(size_t &index, const std::string &text) {
 KleeneNode::KleeneNode(ASTNodePtr atom) : atom(std::move(atom)) {
 }
 
-/**
- * Presumably works as intended...
- * @param index
- * @param text
- * @return
- */
+
 MatchResult KleeneNode::evaluate(size_t &index, const std::string &text) {
     std::string concatenation;
     MatchResult eval = atom->evaluate(index, text);
