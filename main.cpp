@@ -1,9 +1,4 @@
-#include <fstream>
-#include <iostream>
 
-#include "headers/evaluator.h"
-#include "headers/lexer.h"
-#include "headers/parser.h"
 /**
  * There are multiple approaches to this. We can either run a program or have a token list consisting of the tokens that our
  * lexer has made. That way we don't need to lex at every point, instead we can use tokens from a list for our parsing (which
@@ -50,26 +45,34 @@
  *
  * 12/03/2025: Running into an issue where inputting ".*" instead returns cmake (which is not good!). This can be
  * circumvented by instead inputting '.*' but I haven't tested this for ubuntu.
+ * Update: Issue doesn't exist on ubuntu!
  */
 
-/* <REGEX>      ->      <EXPR> [CASE][CAPTURE]                                                                          DONE
+/* <REGEX>      ->      <EXPR>                                                                                          DONE
  * <EXPR>       ->      <TERM> {"+" <TERM>  }*                  (* Alternation OR *)                                    DONE
  * <TERM>       ->      <FACTOR>+                               (* Concatenation *)                                     DONE
- * <FACTOR>     ->      <ATOM> <UNARY>?                         (* Atom with optional unary operand *)                  DONE
- * <ATOM>       ->      <CHAR> | <DOT> | <GROUP>                (* Smallest unit in expressions *)                      DONE
+ * <FACTOR>     ->      <OP> <SUFFIX>?                          (* operand with optional suffix *)                      DONE
+ * <OP>         ->      <CHAR> | <DOT> | <GROUP>                (* Smallest unit in expressions *)                      DONE
  * <GROUP>      ->      "(" <EXPR> ")"                                                                                  DONE
- * <UNARY>      ->      <STAR> | <COUNT>                                                                                DONE
- *
+ * <SUFFIX>     ->      <STAR> | <COUNT>                                                                                DONE
  * <STAR>       ->      "*"                                     (*One or more occurrences*)                             DONE
  * <COUNT>      ->      "{" <DIGIT> "}"                                                                                 DONE
+ * <DOT>        ->      "."                                                                                             DONE
+ * <CHAR>       ->      [a-zA-Z]                                                                                        DONE
+ * <DIGIT>      ->      [0-9]+                                                                                          DONE
+ *
  * <CASE>       ->      "/I"                                                                                            NOT IN CURRENT BRANCH
  * <CAPTURE>    ->      "/O"<COUNT>                                                                                     NOT IN CURRENT BRANCH
- * <DOT>        ->      "."                                                                                             DONE
- * <CHAR>       ->      [a-zA-Z0-9]                                                                                     DONE
- * <DIGIT>      ->      [0-9]+                                                                                          DONE
  *
  *
  */
+
+#include <fstream>
+#include <iostream>
+
+#include "headers/evaluator.h"
+#include "headers/lexer.h"
+#include "headers/parser.h"
 
 /**
  * @param argc Short for Argument Count. Keeps track of number of arguments provided

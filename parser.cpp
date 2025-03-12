@@ -3,10 +3,8 @@
 //
 
 #include <utility>
-
 #include "headers/parser.h"
 #include <fstream>
-#include <sstream>
 
 Parser::Parser(std::queue<std::pair<Tokens, char> > tokens) : tkList(std::move(tokens)),
                                                               root(parseExpr()) {
@@ -21,7 +19,7 @@ Tokens Parser::currentToken() const {
 }
 
 Tokens Parser::peekNextToken() const {
-    if (tkList.size() < 1) {
+    if (tkList.empty()) {
         return Tokens::EOP;
     }
     auto temp = tkList;
@@ -38,6 +36,7 @@ void Parser::nextToken() {
 ASTNodePtr Parser::getRoot() {
     return std::move(root);
 }
+
 
 ASTNodePtr Parser::parseExpr() {
     auto left = parseTerm();
@@ -72,11 +71,11 @@ ASTNodePtr Parser::parseTerm() {
 }
 
 ASTNodePtr Parser::parseFactor() {
-    // handle atoms here! as per grammar rules
+    // handle operands here! as per grammar rules
     if (currentToken() == Tokens::DOT) {
         nextToken();
         auto dotNode = std::make_unique<DotNode>();
-        return parseUnary(std::move(dotNode));
+        return parseSuffix(std::move(dotNode));
     }
     if (currentToken() == Tokens::GROUP_START) {
         return parseGroup();
@@ -85,12 +84,12 @@ ASTNodePtr Parser::parseFactor() {
         char ch = tkList.front().second;
         nextToken();
         auto charNode = std::make_unique<CharNode>(ch);
-        return parseUnary(std::move(charNode));
+        return parseSuffix(std::move(charNode));
     }
     throw std::runtime_error("parseFactor(): unexpected token");
 }
 
-ASTNodePtr Parser::parseUnary(ASTNodePtr node) {
+ASTNodePtr Parser::parseSuffix(ASTNodePtr node) {
     switch (currentToken()) {
         case Tokens::KLEENE: {
             auto unaryNode = std::make_unique<KleeneNode>(std::move(node));
@@ -105,7 +104,7 @@ ASTNodePtr Parser::parseUnary(ASTNodePtr node) {
                 if (currentToken() == Tokens::CHAR) {
                     strNum += tkList.front().second;
                 } else if (currentToken() != Tokens::COUNT_END) {
-                    throw std::runtime_error("parseUnary(): unexpected token (COUNT_START case)");
+                    throw std::runtime_error("parseSuffix(): unexpected token (COUNT_START case)");
                 }
             }
             int count = std::stoi(strNum);

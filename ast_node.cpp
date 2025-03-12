@@ -19,10 +19,10 @@ ConcatNode::ConcatNode() = default;
 GroupNode::GroupNode(ASTNodePtr expression) : expression(std::move(expression)) {
 }
 
-CountNode::CountNode(ASTNodePtr atom, const int count) : atom(std::move(atom)), count(count) {
+CountNode::CountNode(ASTNodePtr operand, const int count) : operand(std::move(operand)), count(count) {
 }
 
-KleeneNode::KleeneNode(ASTNodePtr atom) : atom(std::move(atom)) {
+KleeneNode::KleeneNode(ASTNodePtr operand) : operand(std::move(operand)) {
 }
 
 /**
@@ -61,7 +61,6 @@ MatchResult ORNode::evaluate(size_t &index, const std::string &text) {
     if (lhs.exit == false) {
         return right->evaluate(rhsIndex, text);
     }
-
     return lhs;
 }
 
@@ -84,13 +83,13 @@ MatchResult ConcatNode::evaluate(size_t &index, const std::string &text) {
 
 MatchResult KleeneNode::evaluate(size_t &index, const std::string &text) {
     std::string concatenation;
-    MatchResult eval = atom->evaluate(index, text);
+    MatchResult eval = operand->evaluate(index, text);
     if (eval.exit == false) {
         return eval;
     }
     concatenation += eval.match;
     while (eval.exit == true) {
-        eval = atom->evaluate(index, text);
+        eval = operand->evaluate(index, text);
         concatenation += eval.match;
     }
     index--;
@@ -104,7 +103,7 @@ MatchResult CountNode::evaluate(size_t &index, const std::string &text) {
     MatchResult eval = {"", false};
 
     for (int i = 0; i < count; i++) {
-        eval = atom->evaluate(index, text);
+        eval = operand->evaluate(index, text);
         if (eval.exit == false) {
             return eval;
         }
@@ -112,7 +111,6 @@ MatchResult CountNode::evaluate(size_t &index, const std::string &text) {
     }
     return {concatenation, true};
 }
-
 
 
 MatchResult GroupNode::evaluate(size_t &index, const std::string &text) {

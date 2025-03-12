@@ -19,7 +19,7 @@ public:
 
     /**
      * Helper function used in the while loop for parseTerm (A ducktape fix for shoddy queue management)
-     * @return if index is 2 or less, returns EOP, otherwise returns token
+     * @return returns EOP for empty lists, otherwise returns token
      * that is one step ahead of first()
      */
     [[nodiscard]] Tokens peekNextToken() const;
@@ -30,10 +30,14 @@ public:
      */
     void nextToken();
 
+    /**
+     * getter function for private member root
+     * @return Returns private member root
+     */
     ASTNodePtr getRoot();
 
     /**
-     * Recursive function that handles OR operands. Calls parseTerm()
+     * Recursive function that handles OR between two factors. Calls parseTerm()
      * @return It will either return an OrNode with two recursive branches,
      * or it will continue parsing until it returns a single recursive branch
      */
@@ -47,26 +51,23 @@ public:
     ASTNodePtr parseTerm();
 
     /**
-     * Recursive function that handles atoms (chars) and unary operands. Calls parseUnary()
-     * @return It will either return a groupNode with a recursive branch, or an charNode
+     * Recursive function that handles operands. Calls parseUnary() for certain operands.
+     * @return It will either return a groupNode with a recursive branch, or a charNode
      * which will be checked for any potential unary operands that may follow it.
      */
     ASTNodePtr parseFactor();
 
     /**
-     * ParseUnary manages count groups and kleenestars following atomic nodes (dot and char) or flagNodes (solely count in that case), it is
-     * called from parseRegex for flagNodes, and parseFactor for atomic nodes.
+     * ParseSuffix manages count groups and kleenestars following operands, it is
+     * called from parseFactor for operands.
      *
-     *
-     *
-     * @return For atomic nodes: returns either a countNode or KleeneNode containing the atomic node, or it will return
-     * the parameter node as is. For FlagNodes: returns FlagNode with an updated captureCount member.
-     * without creating any new nodes or recursive chains.
+     * @return Returns either a countNode or KleeneNode containing the operand, or it will return
+     * the parameter node as is.
      */
-    ASTNodePtr parseUnary(ASTNodePtr node);
+    ASTNodePtr parseSuffix(ASTNodePtr node);
 
     /**
-     * Handles parsing inside of groups. Has error handling included to enforce
+     * Handles parsing inside groups. Has error handling included to enforce
      * correct syntax.
      * @return A recursive branch starting from <EXPR>
      */

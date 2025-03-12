@@ -9,8 +9,7 @@
 #include <iostream>
 
 Evaluator::Evaluator(std::string text, ASTNodePtr root) :   text(std::move(text)),
-                                                            root(std::move(root)),
-                                                            match({"", false}) {}
+                                                            root(std::move(root)) {}
 
 void Evaluator::evaluate() {
     size_t index = 0;
